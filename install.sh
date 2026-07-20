@@ -4,7 +4,7 @@ set -euo pipefail
 
 APP_NAME="sd-deploy"
 VERSION="v1.0.0-beta" # Change this as you release new versions
-GITHUB_REPO="IsaiahTek/SafeDeployer" # Update to your actual repository
+GITHUB_REPO="IsaiahTek/SafeDeployer-releases" # Update to your actual repository
 INSTALL_DIR="/usr/local/bin"
 USE_SUDO=true
 
