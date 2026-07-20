@@ -2,6 +2,8 @@
 
 > A lightweight, zero-dependency orchestration engine for executing zero-downtime Blue-Green deployments on Docker daemons.
 
+⚠️ **License Notice**: This project is published under a **Source-Available License**. You are free to view, download, and use this orchestrator for internal, personal, or educational use. Commercial redistribution, white-labeling, rebranding, or hosting this engine as a competing service is strictly prohibited. See `LICENSE` for details.
+
 ---
 
 ## 🚀 SafeDeployer Enterprise
@@ -12,7 +14,7 @@ Looking for advanced deployment features? The Enterprise version provides:
 - **Live UI Dashboard**: Cloud-synced state tracking and real-time deployment progress.
 - **Resource Monitoring**: Continuously gathers Docker container stats (CPU, Memory, Network).
 
-Check out [SafeDeployer](https://safedeployer.com) for more details.
+Check out [SafeDeployer ](https://safedeployer.dev) for more details.
 
 ---
 
@@ -281,7 +283,7 @@ x-safedeployer:
   # 🔒 Enterprise-Only Sections
   analytics:
     enabled: true
-    endpoint: "https://api.safedeployer.com/v1/telemetry"
+    endpoint: "https://api.safedeployer.dev/v1/telemetry"
     interval_seconds: 10
   
   canary:
@@ -319,7 +321,7 @@ Enterprise users can receive automated real-time alerts in Slack or Discord when
 
 Simply export the webhook URL before your deployment:
 ```bash
-export SAFEDEPLOYER_WEBHOOK_URL="https://hooks.slack.com/services/<YOUR_WORKSPACE>/<YOUR_CHANNEL>/<YOUR_TOKEN>"
+export SAFEDEPLOYER_WEBHOOK_URL="https://hooks.slack.com/services/<SLACK_TOKEN>"
 ```
 
 If the API token is missing or expired, the Enterprise binary will gracefully degrade and perform a standard 100% Blue-Green traffic switch (matching the OSS behavior) to ensure your deployments never fail due to licensing issues.
@@ -457,4 +459,19 @@ Run the following command in your terminal:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/IsaiahTek/SafeDeployer-releases/main/install.sh | bash
+```
+
+### Manual Installation
+Alternatively, compile and install from source:
+
+```bash
+# Compile the binary
+go build -o sd-deploy cmd/sd-deploy/main.go
+
+# Make executable and move to PATH
+chmod +x ./sd-deploy
+sudo mv ./sd-deploy /usr/local/bin/
+
+# Verify installation
+sd-deploy --version
 ```
