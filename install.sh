@@ -74,14 +74,20 @@ fi
 
 # --- Step 3: Move to Path ---
 echo " Installing binary to $INSTALL_DIR..."
-if [ ! -d "$INSTALL_DIR" ]; then
-    if [ "$USE_SUDO" = true ]; then sudo mkdir -p "$INSTALL_DIR"; else mkdir -p "$INSTALL_DIR"; fi
+
+INSTALLED=false
+if [ "$USE_SUDO" = true ]; then
+    if sudo mkdir -p "$INSTALL_DIR" 2>/dev/null && sudo mv "$TMP_DIR/$APP_NAME" "$INSTALL_DIR/$APP_NAME" 2>/dev/null; then
+        sudo chmod +x "$INSTALL_DIR/$APP_NAME"
+        INSTALLED=true
+    else
+        echo " Could not write to $INSTALL_DIR with sudo. Falling back to user directory..."
+        INSTALL_DIR="$HOME/.local/bin"
+    fi
 fi
 
-if [ "$USE_SUDO" = true ]; then
-    sudo mv "$TMP_DIR/$APP_NAME" "$INSTALL_DIR/$APP_NAME"
-    sudo chmod +x "$INSTALL_DIR/$APP_NAME"
-else
+if [ "$INSTALLED" = false ]; then
+    mkdir -p "$INSTALL_DIR"
     mv "$TMP_DIR/$APP_NAME" "$INSTALL_DIR/$APP_NAME"
     chmod +x "$INSTALL_DIR/$APP_NAME"
 fi
