@@ -87,9 +87,22 @@ if [ "$USE_SUDO" = true ]; then
 fi
 
 if [ "$INSTALLED" = false ]; then
-    mkdir -p "$INSTALL_DIR"
-    mv "$TMP_DIR/$APP_NAME" "$INSTALL_DIR/$APP_NAME"
-    chmod +x "$INSTALL_DIR/$APP_NAME"
+    if mkdir -p "$INSTALL_DIR" 2>/dev/null && mv "$TMP_DIR/$APP_NAME" "$INSTALL_DIR/$APP_NAME" 2>/dev/null && chmod +x "$INSTALL_DIR/$APP_NAME" 2>/dev/null; then
+        INSTALLED=true
+    else
+        # Tier 3: /tmp emergency fallback
+        EMERGENCY_DIR="/tmp"
+        if mv "$TMP_DIR/$APP_NAME" "$EMERGENCY_DIR/$APP_NAME" 2>/dev/null && chmod +x "$EMERGENCY_DIR/$APP_NAME" 2>/dev/null; then
+            INSTALL_DIR="$EMERGENCY_DIR"
+            INSTALLED=true
+            echo " Warning: Installed binary to temporary path $INSTALL_DIR/sd-deploy as emergency fallback."
+        else
+            echo " Error: Failed to install SafeDeployer binary."
+            echo "   Could not write to /usr/local/bin, $HOME/.local/bin, or /tmp."
+            echo "   Please check filesystem write permissions and available disk space."
+            exit 1
+        fi
+    fi
 fi
 
 # --- Step 4: Verify and Handle PATH (Same as before) ---
