@@ -67,6 +67,7 @@ Copy and paste this clean snippet into your GitHub Actions workflow:
             # 1. Auto-install SafeDeployer if missing on remote server
             if ! command -v sd-deploy &> /dev/null; then
               curl -fsSL https://safedeployer.com/api/install | bash
+              export PATH="$HOME/.local/bin:/usr/local/bin:$PATH"
             fi
 
             # 2. Pull latest pre-built container image (if using registry)
