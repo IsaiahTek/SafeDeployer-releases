@@ -6,15 +6,15 @@ APP_NAME="sd-deploy"
 VERSION="${VERSION:-v1.0.0-test}" # Target tag on GitHub releases
 GITHUB_REPO="IsaiahTek/SafeDeployer-releases" # Update to your actual repository
 INSTALL_DIR="/usr/local/bin"
-USE_SUDO=true
+USE_SUDO=false
 
-# Smart detection for root user, writable directory, or non-interactive shells
-if [ "$(id -u)" -eq 0 ] || [ -w "$INSTALL_DIR" ]; then
-    USE_SUDO=false
-elif [ "${1:-}" == "--local" ] || [ ! -t 0 ] && ! sudo -n true 2>/dev/null; then
-    # Non-interactive shell without passwordless sudo, or explicit --local flag: install to user home
+if [ "${1:-}" == "--local" ]; then
     INSTALL_DIR="$HOME/.local/bin"
     USE_SUDO=false
+elif [ "$(id -u)" -eq 0 ] || [ -w "$INSTALL_DIR" ]; then
+    USE_SUDO=false
+elif command -v sudo &> /dev/null; then
+    USE_SUDO=true
 fi
 
 echo "Starting installation for SafeDeployer..."
