@@ -14,7 +14,7 @@ Looking for advanced deployment features? The Enterprise version provides:
 - **Live UI Dashboard**: Cloud-synced state tracking and real-time deployment progress.
 - **Resource Monitoring**: Continuously gathers Docker container stats (CPU, Memory, Network).
 
-Check out [SafeDeployer ](https://safedeployer.dev) for more details.
+Check out [SafeDeployer ](https://safedeployer.com) for more details.
 
 ---
 
@@ -283,7 +283,7 @@ x-safedeployer:
   # 🔒 Enterprise-Only Sections
   analytics:
     enabled: true
-    endpoint: "https://api.safedeployer.dev/v1/telemetry"
+    endpoint: "https://api.safedeployer.com/v1/telemetry"
     interval_seconds: 10
   
   canary:
