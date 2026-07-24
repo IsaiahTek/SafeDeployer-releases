@@ -13,8 +13,14 @@ if [ "${1:-}" == "--local" ]; then
     USE_SUDO=false
 elif [ "$(id -u)" -eq 0 ] || [ -w "$INSTALL_DIR" ]; then
     USE_SUDO=false
-elif command -v sudo &> /dev/null; then
+elif sudo -n true 2>/dev/null; then
     USE_SUDO=true
+elif command -v sudo &> /dev/null && [ -t 0 ]; then
+    USE_SUDO=true
+else
+    # Non-interactive shell without passwordless sudo: fallback to user home directory
+    INSTALL_DIR="$HOME/.local/bin"
+    USE_SUDO=false
 fi
 
 echo "Starting installation for SafeDeployer..."
