@@ -29,6 +29,62 @@ SafeDeployer automates the orchestration lifecycle of your application container
 
 ---
 
+## 📦 Installation & CI/CD Setup Guide
+
+### 1. One-Line Quick Install
+Run the standard installer script on your server or local machine:
+
+```bash
+curl -fsSL https://safedeployer.com/api/install | bash
+```
+
+### 2. How Installation Works (Root vs Non-Root Privileges)
+
+The installer automatically detects system permissions and environment types:
+
+* **Root Users & Passwordless Sudo (`root` or `ubuntu` VPS droplets)**:
+  Installs globally to `/usr/local/bin/sd-deploy`. Instantly available system-wide for all users and shells.
+* **Non-Root / Non-Interactive Shells (Unprivileged SSH users)**:
+  Automatically falls back to installing in `$HOME/.local/bin/sd-deploy` with **zero `sudo` / zero password prompts**.
+* **Explicit User-Space Installation**:
+  Force installation to user space without root:
+  ```bash
+  curl -fsSL https://safedeployer.com/api/install | bash -s -- --local
+  ```
+
+### 3. Universal CI/CD Deployment Snippet (GitHub Actions / GitLab CI)
+
+Because non-interactive SSH sessions (e.g., `appleboy/ssh-action`) do not execute interactive `.bashrc` files, include `export PATH=$PATH:$HOME/.local/bin:/usr/local/bin` at the beginning of your SSH script.
+
+This snippet works **universally across `root` and non-root server environments**:
+
+```yaml
+      - name: Trigger Remote Zero-Downtime Deployment
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script: |
+            # 1. Guarantee PATH includes both ~/.local/bin and /usr/local/bin
+            export PATH=$PATH:$HOME/.local/bin:/usr/local/bin
+
+            # 2. Auto-install SafeDeployer if missing on remote server
+            if ! command -v sd-deploy &> /dev/null; then
+              curl -fsSL https://safedeployer.com/api/install | bash
+            fi
+
+            # 3. Pull latest pre-built container image (if using registry)
+            REPO_LOWER=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+            docker pull ghcr.io/${REPO_LOWER}:${{ github.sha }}
+
+            # 4. Execute Blue-Green deployment
+            cd /var/www/myapp
+            sd-deploy up --config docker-compose.yml --tag ${{ github.sha }}
+```
+
+---
+
 ## Reverse Proxy Architecture: Who Does What?
 
 To make deployments zero-downtime, SafeDeployer integrates with your existing reverse proxy. 
