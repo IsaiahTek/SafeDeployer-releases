@@ -54,9 +54,7 @@ The installer automatically detects system permissions and environment types:
 
 ### 3. Universal CI/CD Deployment Snippet (GitHub Actions / GitLab CI)
 
-Because non-interactive SSH sessions (e.g., `appleboy/ssh-action`) do not execute interactive `.bashrc` files, include `export PATH=$PATH:$HOME/.local/bin:/usr/local/bin` at the beginning of your SSH script.
-
-This snippet works **universally across `root` and non-root server environments**:
+Copy and paste this clean snippet into your GitHub Actions workflow:
 
 ```yaml
       - name: Trigger Remote Zero-Downtime Deployment
