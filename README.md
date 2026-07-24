@@ -66,19 +66,16 @@ This snippet works **universally across `root` and non-root server environments*
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
-            # 1. Guarantee PATH includes both ~/.local/bin and /usr/local/bin
-            export PATH=$PATH:$HOME/.local/bin:/usr/local/bin
-
-            # 2. Auto-install SafeDeployer if missing on remote server
+            # 1. Auto-install SafeDeployer if missing on remote server
             if ! command -v sd-deploy &> /dev/null; then
               curl -fsSL https://safedeployer.com/api/install | bash
             fi
 
-            # 3. Pull latest pre-built container image (if using registry)
+            # 2. Pull latest pre-built container image (if using registry)
             REPO_LOWER=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
             docker pull ghcr.io/${REPO_LOWER}:${{ github.sha }}
 
-            # 4. Execute Blue-Green deployment
+            # 3. Execute Blue-Green deployment
             cd /var/www/myapp
             sd-deploy up --config docker-compose.yml --tag ${{ github.sha }}
 ```
