@@ -3,7 +3,7 @@
 set -euo pipefail
 
 APP_NAME="sd-deploy"
-VERSION="v1.0.0-beta" # Change this as you release new versions
+VERSION="${VERSION:-v1.0.0-test}" # Target tag on GitHub releases
 GITHUB_REPO="IsaiahTek/SafeDeployer-releases" # Update to your actual repository
 INSTALL_DIR="/usr/local/bin"
 USE_SUDO=true
@@ -46,9 +46,17 @@ TMP_DIR=$(mktemp -d)
 trap 'rm -rf "$TMP_DIR"' EXIT
 
 if command -v curl &> /dev/null; then
-    curl -Lsf "$DOWNLOAD_URL" -o "$TMP_DIR/$APP_NAME"
+    if ! curl -Lsf "$DOWNLOAD_URL" -o "$TMP_DIR/$APP_NAME"; then
+        echo "Error: Failed to download binary from $DOWNLOAD_URL"
+        echo "   Release version '$VERSION' for asset '$BINARY_NAME' was not found."
+        exit 1
+    fi
 elif command -v wget &> /dev/null; then
-    wget -qO "$TMP_DIR/$APP_NAME" "$DOWNLOAD_URL"
+    if ! wget -qO "$TMP_DIR/$APP_NAME" "$DOWNLOAD_URL"; then
+        echo "Error: Failed to download binary from $DOWNLOAD_URL"
+        echo "   Release version '$VERSION' for asset '$BINARY_NAME' was not found."
+        exit 1
+    fi
 else
     echo "Error: Neither curl nor wget was found. Please install one to download the binary."
     exit 1
