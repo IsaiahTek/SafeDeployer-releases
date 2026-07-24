@@ -3,7 +3,7 @@
 set -euo pipefail
 
 APP_NAME="sd-deploy"
-VERSION="${VERSION:-v1.0.0-test}" # Target tag on GitHub releases
+VERSION="${VERSION:-v1.0.0-beta}" # Target tag on GitHub releases
 GITHUB_REPO="IsaiahTek/SafeDeployer-releases" # Update to your actual repository
 INSTALL_DIR="/usr/local/bin"
 USE_SUDO=false

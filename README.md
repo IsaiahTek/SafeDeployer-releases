@@ -2,7 +2,7 @@
 
 > A lightweight, zero-dependency orchestration engine for executing zero-downtime Blue-Green deployments on Docker daemons.
 
-⚠️ **License Notice**: This project is published under a **Source-Available License**. You are free to view, download, and use this orchestrator for internal, personal, or educational use. Commercial redistribution, white-labeling, rebranding, or hosting this engine as a competing service is strictly prohibited. See `LICENSE` for details.
+**License Notice**: This project is published under a **Source-Available License**. You are free to view, download, and use this orchestrator for internal, personal, or educational use. Commercial redistribution, white-labeling, rebranding, or hosting this engine as a competing service is strictly prohibited. See `LICENSE` for details.
 
 ---
 
