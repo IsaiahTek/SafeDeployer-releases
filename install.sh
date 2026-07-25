@@ -3,7 +3,9 @@
 set -euo pipefail
 
 APP_NAME="sd-deploy"
-VERSION="${VERSION:-v1.0.4-beta}" # Target tag on GitHub releases
+if [ -z "${VERSION:-}" ]; then
+    VERSION=$(curl -s "https://api.github.com/repos/IsaiahTek/SafeDeployer-releases/releases/latest" | grep -o '"tag_name": "[^"]*' | grep -o '[^"]*$')
+fi
 GITHUB_REPO="IsaiahTek/SafeDeployer-releases" # Update to your actual repository
 INSTALL_DIR="/usr/local/bin"
 USE_SUDO=false
