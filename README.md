@@ -335,7 +335,7 @@ x-safedeployer:
   # 🔒 Enterprise-Only Sections
   analytics:
     enabled: true
-    endpoint: "https://api.safedeployer.com/v1/telemetry"
+    endpoint: "https://api.safedeployer.com/api/v1/telemetry"
     interval_seconds: 10
   
   canary:
@@ -376,7 +376,7 @@ Simply export the webhook URL before your deployment:
 export SAFEDEPLOYER_WEBHOOK_URL="https://hooks.slack.com/services/<SLACK_TOKEN>"
 ```
 
-If the API token is missing or expired, the Enterprise binary will gracefully degrade and perform a standard 100% Blue-Green traffic switch (matching the OSS behavior) to ensure your deployments never fail due to licensing issues.
+If the API token is missing or expired, the Enterprise binary will gracefully fall back to a basic `docker compose up -d` deployment with downtime. It will automatically tear down any running Blue-Green containers and route traffic to the standard service.
 
 ---
 
